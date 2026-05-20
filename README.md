@@ -1,4 +1,7 @@
 # Sweet JS Tools
+![npm](https://img.shields.io/npm/v/sweet-js-tools)
+![license](https://img.shields.io/npm/l/sweet-js-tools)
+![typescript](https://img.shields.io/badge/TypeScript-ready-blue)
 
 A library of **practical** & **reusable** utilities designed to **streamline everyday development**, making JavaScript/TypeScript code cleaner, safer, and more consistent.
 
