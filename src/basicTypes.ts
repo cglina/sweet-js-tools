@@ -1,9 +1,9 @@
-import type { BaseObject } from "./tools/objectTools.js";
+
 /*
  * SWEET TYPE SYSTEM OVERVIEW:
  *
- * BaseTypes      → raw categories (string, number, object, etc.)
- * PrecisionTypes → refined checks (array, actualObj, numeric, true/false)
+ * BaseTypes      → raw categories (string, number, object, array, etc.)
+ * PrecisionTypes → refined checks (numeric, true/false)
  * XTypes         → usable values (non-empty, non-zero, etc.)
  *
  * sweetTypeCheck → unified entry point
@@ -13,28 +13,22 @@ import type { BaseObject } from "./tools/objectTools.js";
 /**
  * Standard base type names supported by Sweet Types.
  *
- * - These mostly follow JavaScript `typeof` behavior
- * - However, Sweet Types may apply small practical adjustments
- *   (e.g. excluding `NaN` from valid `number` checks)
- *
- * Notes:
- * - `object` includes arrays (JavaScript behavior)
- * - `null` is separated because `typeof null === "object"`
+ * These mostly follow JavaScript `typeof` behavior, with a few additions:
+ * - `array`: `object` & `array` are considered distinct types
+ * - `null`: in JS, would return type `object`; SweetTypes names `null` as a distinct type
  */
 
-export type BaseTypes = 'string' | 'object' | 'number' | 'symbol' | 'boolean' | 'function' | 'bigint' | 'undefined' | 'null'
+export type BaseTypes = 'string' | 'object' | 'number' | 'array' | 'symbol' | 'boolean' | 'function' | 'bigint' | 'undefined' | 'null'
 
 /**
  * More specific Sweet type names used to narrow common JavaScript edge cases.
  *
  * Includes:
- * - `array` — value is an array
- * - `actualObj` — value is a non-null object and not an array
  * - `true` — value is exactly `true`
  * - `false` — value is exactly `false`
- * - `numeric` — value is a number or numeric string
+ * - `numeric` — value is a numeric string
  */
-export type PrecisionTypes = 'array' | 'actualObj' | 'true' | 'false' | 'numeric'
+export type PrecisionTypes = 'true' | 'false' | 'numeric'
 
 /**
  * Strict/non-empty Sweet type names.
@@ -43,7 +37,7 @@ export type PrecisionTypes = 'array' | 'actualObj' | 'true' | 'false' | 'numeric
  *
  * - `stringX` — string with length > 0
  * - `arrayX` — array with length > 0
- * - `objectX` — actual object with at least one key-value pair
+ * - `objectX` — non-array object with at least one key-value pair
  * - `numberX` — valid number that is not `0` (or `NaN`)
  * - `symbolX` - symbol with description, ie: Symbol() returns false
  */
@@ -52,12 +46,23 @@ export type XTypes = 'stringX' | 'objectX' | 'arrayX' | 'numberX' | 'symbolX'
 /**
  * Runtime list of supported base type names.
  */
-const baseTypeArray: BaseTypes[] = ['string', 'object', 'number', 'boolean', 'bigint', 'undefined', 'null']
+const baseTypeArray: BaseTypes[] = [
+    "string",
+    "object",
+    "number",
+    "array",
+    "symbol",
+    "boolean",
+    "function",
+    "bigint",
+    "undefined",
+    "null",
+]
 
 /**
  * Runtime list of supported precision type names.
  */
-const precisionTypeArray: PrecisionTypes[] = ['array', 'actualObj', 'true', 'false', 'numeric']
+const precisionTypeArray: PrecisionTypes[] = ['true', 'false', 'numeric']
 
 /**
  * Runtime list of supported strict/non-empty `X` type names.
@@ -105,28 +110,27 @@ export function isBoolean(item: any): item is boolean {
 
 
 /**
- * Returns true if the value is a non-null object.
- * 
- * Arrays also return true.
- * 
+ * Returns true if the value is a non-null, non-array object.
+ *
+ * Arrays return false because Sweet Types treats `array`
+ * as its own base type.
+ *
  * @example
  * isObject({ a: 1 })
- *  
  * // true
- * 
+ *
  * isObject([1, 2])
- *  
- * // true
+ * // false
  */
 export function isObject(item: any): item is object {
-    return typeof item === "object" && item !== null
+    return typeof item === "object" && !Array.isArray(item) && item !== null
 }
 
 /**
  * Returns `true` if the value is a valid number.
  *
  * Unlike JavaScript's raw `typeof` behavior, this returns `false` for `NaN`
- * because `NaN` is not useful as a usable number value.
+ * because `NaN` cannot be used as a valid numeric value.
  *
  * @example
  * isNumber(12)
@@ -192,26 +196,6 @@ export function isNull(item: any): item is null {
     return item === null
 }
 
-///////////// PRECISION TYPE CHECKS
-
-/**
- * Returns `true` if the value is an object but not an array.
- *
- * An `actualObj` means:
- * - the value is a non-null object
- * - and it is not an array
- *
- * @example
- * isActualObj({ a: 1 })  
- * // true
- * isActualObj([1, 2])  
- * // false
- * isActualObj(null)  
- * // false
- */
-export function isActualObj(item: any): item is Record<string, any> {
-    return typeof item === 'object' && item !== null && !Array.isArray(item)
-}
 
 /**
  * Returns `true` if the value is an array.
@@ -226,6 +210,8 @@ export function isActualObj(item: any): item is Record<string, any> {
 export function isArray(item: any): item is any[] {
     return Array.isArray(item)
 }
+
+
 
 /**
  * Returns `true` if the value is a function.
@@ -269,52 +255,47 @@ export function isFunction(item: any): item is Function {
 }
 
 
+
+///////////// PRECISION TYPE CHECKS
+
 /**
- * Returns `true` if the value is numeric.
- *
- * A `numeric` value means:
- * - a valid number (not `NaN`)
- * - or a string that can be converted to a valid number
+ * Returns `true` if a string is a valid numeric representation.
  *
  * Includes:
- * - integers, floats, scientific notation (`"1e3"`)
+ * - integers
+ * - floats
+ * - scientific notation (`"1e3"`)
  * - strings with surrounding whitespace
  *
  * Excludes:
- * - empty strings or whitespace-only strings
+ * - empty strings
+ * - whitespace-only strings
  * - non-numeric strings
  *
  * @example
- * isNumeric(12)  
+ * isNumeric("12")
  * // true
- * 
- * isNumeric("12")  
+ *
+ * @example
+ * isNumeric("  12  ")
  * // true
- * 
- * isNumeric("  12  ")  
+ *
+ * @example
+ * isNumeric("1e3")
  * // true
- * 
- * isNumeric("1e3")  
- * // true
- * 
- * isNumeric("lala")  
- * // false
- * 
- * isNumeric("")  
+ *
+ * @example
+ * isNumeric("lala")
  * // false
  */
-export function isNumeric(item: any): item is string | number {
-    if (typeof item === "number") {
-        return !isNaN(item)
-    }
+export function isNumeric(item: any): item is string {
+    if (typeof item !== "string") return false
 
-    if (typeof item === "string") {
-        const trimmed = item.trim()
-        if (trimmed === "") return false
-        return !isNaN(Number(trimmed))
-    }
+    const trimmed = item.trim()
 
-    return false
+    if (trimmed === "") return false
+
+    return !isNaN(Number(trimmed))
 }
 
 /**
@@ -406,7 +387,7 @@ export function isSymbolX(item: any): item is symbol {
 
 
 /**
- * Returns `true` if the value is a non-empty actual object.
+ * Returns `true` if the value is a non-empty object (not array!).
  *
  * An `objectX` means:
  * - the value is a non-null object
@@ -427,7 +408,7 @@ export function isSymbolX(item: any): item is symbol {
  * // false
  */
 export function isObjectX(item: any): item is Record<string, any> {
-    return typeof item === 'object' && item !== null && !Array.isArray(item) && Object.keys(item).length > 0
+    return isObject(item) && Object.keys(item).length > 0
 }
 
 /**
@@ -568,7 +549,7 @@ export function findSweetType(item: any): SweetBaseTypes {
  * - `null`
  * - `undefined`
  *
- * Unlike `isUsable`, this does not treat empty strings,
+ * Unlike `isEmptyVal` or `isClearValue`, this does not treat empty strings,
  * empty arrays, empty objects, `0`, or `false` as nullish.
  *
  * @example
@@ -613,21 +594,22 @@ export function isNullish(item: any): boolean {
  * baseTypeCheck(null, "null")  
  * // true
  * 
- * baseTypeCheck([], "object")  
- * // true
- * 
- * baseTypeCheck(null, "object")  
+ * baseTypeCheck([], "object")
  * // false
+ * 
+ * baseTypeCheck([], "array")
+ * // true
  */
 function baseTypeCheck(item: any, baseType: BaseTypes): boolean {
     if (baseType === 'null') return item === null
-    if (baseType === 'object') return typeof item === 'object' && item !== null
+    if (baseType === "object") return isObject(item)
+    if (baseType === "array") return isArray(item)
     if (baseType === 'number') return isNumber(item)
     return typeof item === baseType
 }
 
 /**
- * Checks whether a value matches any supported Sweet base type.
+ * Checks whether a value matches any supported Sweet type.
  *
  * This is the main dispatcher for `SweetBaseTypes`.
  *
@@ -651,9 +633,6 @@ function baseTypeCheck(item: any, baseType: BaseTypes): boolean {
  * // false
  * 
  * sweetTypeCheck([], "array")  
- * // true
- * 
- * sweetTypeCheck({}, "actualObj")  
  * // true
  * 
  * sweetTypeCheck("12", "numeric")  
@@ -727,13 +706,13 @@ function xTypeCheck(item: any, xType: XTypes): boolean {
 /**
  * Internal map of all `PrecisionTypes` to their corresponding check functions.
  *
- * Precision types narrow common JavaScript edge cases, such as arrays,
- * actual objects, exact boolean values, and numeric strings.
+ * Precision types narrow Sweet/JS types further to include exact boolean values and numeric strings.
  *
  * This is used by `precisionTypeCheck` to dynamically resolve checks.
  */
+
 const precisionChecks: Record<PrecisionTypes, (item: any) => boolean> = {
-    array: isArray, actualObj: isActualObj, true: isTrue, false: isFalse, numeric: isNumeric,
+    true: isTrue, false: isFalse, numeric: isNumeric,
 }
 
 /**
@@ -745,16 +724,16 @@ const precisionChecks: Record<PrecisionTypes, (item: any) => boolean> = {
  * @param item - The value to check
  * @param precisionType - The precision Sweet type to validate against
  *
+* @example
+ * precisionTypeCheck(true, "true")
+ * // true
+ *
  * @example
- * precisionTypeCheck([1, 2], "array")  
+ * precisionTypeCheck(false, "false")
  * // true
- * 
- * precisionTypeCheck({}, "actualObj")  
- * // true
- * 
- * precisionTypeCheck(true, "true")  
- * // true
- * precisionTypeCheck("12", "numeric")  
+ *
+ * @example
+ * precisionTypeCheck("12", "numeric")
  * // true
  */
 function precisionTypeCheck(item: any, precisionType: PrecisionTypes): boolean {
@@ -770,7 +749,7 @@ function precisionTypeCheck(item: any, precisionType: PrecisionTypes): boolean {
  * - empty or whitespace-only strings
  * - `0`
  * - empty arrays
- * - empty actual objects
+ * - empty (non-array) objects
  *
  * Values like `false`, functions, symbols, and bigints are not treated as empty.
  *
@@ -798,11 +777,10 @@ function precisionTypeCheck(item: any, precisionType: PrecisionTypes): boolean {
  */
 export function isEmptyVal(value: any): boolean {
     if (isNullish(value)) return true
-
     if (isString(value)) return !isStringX(value)
     if (isNumber(value)) return !isNumberX(value)
     if (isArray(value)) return !isArrayX(value)
-    if (isActualObj(value)) return !isObjectX(value)
+    if (isObject(value)) return !isObjectX(value)
 
     return false
 }
@@ -815,7 +793,7 @@ export function isEmptyVal(value: any): boolean {
  * - non-empty string
  * - non-zero number
  * - non-empty array
- * - non-empty actual object
+ * - non-empty object (not array!)
  * - boolean `true`
  *
  * Values like `false`, `0`, empty strings, empty arrays,
@@ -851,7 +829,7 @@ export function isClearValue(value: any): boolean {
     if (isString(value)) return isStringX(value)
     if (isNumber(value)) return isNumberX(value)
     if (isArray(value)) return isArrayX(value)
-    if (isActualObj(value)) return isObjectX(value)
+    if (isObject(value)) return isObjectX(value)
     if (isBoolean(value)) return value
     return false
 }

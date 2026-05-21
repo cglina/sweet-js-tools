@@ -1,4 +1,4 @@
-import { findSweetType, isClearValue, isEmptyVal, isNullish, isObjectX } from "../basicTypes.js";
+import { findSweetType, isClearValue, isEmptyVal, isNullish, isObject, isObjectX } from "../basicTypes.js";
 
 export type BaseObject = Record<string, any>
 type TypesCheckReturn = Record<string, string> | string[][]
@@ -152,7 +152,7 @@ export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): Ba
  * - empty or whitespace-only strings
  * - `0`
  * - empty arrays
- * - empty actual objects
+ * - empty objects
  *
  * Returns `[]` if the input is nullish.
  *
@@ -474,7 +474,7 @@ export function objFilter(
         (_key, value) => value !== null
 ): BaseObject {
 
-    if (isNullish(obj)) return {}
+    if (!isObject(obj)) return {}
 
     const entries = Object.entries(obj)
 

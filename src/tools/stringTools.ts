@@ -240,7 +240,7 @@ export function trimExtra(text: string = ""): string {
  *
  * @example
  * normalizeString("München Straße")
- * // "munchen strasse"
+ * // "Munchen Strasse"
  *
  * @example
  * normalizeString("  Olá   mundo  ")
@@ -280,7 +280,7 @@ export function normalizeString(
  *
  * @example
  * normalizeText("München Straße")
- * // "munchen strasse"
+ * // "Munchen Strasse"
  *
  * @example
  * normalizeText("  Olá   mundo  ")

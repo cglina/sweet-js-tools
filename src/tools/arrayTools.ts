@@ -237,7 +237,7 @@ export function paginationSlices(array: any[], partLength: number = 3): number[]
 ///////////// TYPE FILTERING & REPLACING
 
 /**
- * Returns only the items that match a given Sweet Base Type.
+ * Returns only the items that match a given SweetType.
  * 
  * Returns an empty array if the array is empty.
  * 
@@ -250,7 +250,7 @@ export function includeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'stri
 }
 
 /**
- * Returns only the items that do not match a given Sweet Base Type.
+ * Returns only the items that do not match a given SweetType.
  * 
  * Returns an empty array if the array is empty.
  * 
@@ -263,7 +263,7 @@ export function excludeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'stri
 }
 
 /**
- * Returns each item if it matches a given Sweet Base Type.
+ * Returns each item if it matches a given SweetType.
  * 
  * If an item does not match, it is replaced with `falseDefault`.
  * Returns an empty array if the array is empty.

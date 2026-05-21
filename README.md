@@ -199,8 +199,8 @@ SweetTypes expands normal JavaScript type checks with:
 
 Includes:
 
-- base type checks: `isString`, `isNumber`, `isBoolean`, `isObject`, `isNull`, `isUndefined`, `isBigInt`, `isFunction`
-- precision checks: `isArray`, `isActualObj`, `isTrue`, `isFalse`, `isNumeric`
+- base type checks: `isString`, `isNumber`, `isBoolean`, `isObject`, `isArray`, `isNull`, `isUndefined`, `isBigInt`, `isFunction`, `isSymbol`
+- precision checks: `isTrue`, `isFalse`, `isNumeric`
 - strict/usable checks (`XTypes`): `isStringX`, `isObjectX`, `isArrayX`, `isNumberX`, `isSymbolX`
 - value state helpers: `isNullish`, `isEmptyVal`, `isClearValue`
 - type inspection helpers: `findSweetType`
@@ -211,8 +211,14 @@ Includes:
 isNumeric(" 12 ")
 // true
 
-isStringX("   ")
+isNumeric(12)
 // false
+
+isObject([1, 2])
+// false
+
+isArray([1, 2])
+// true
 
 findSweetType([1, 2])
 // "arrayX"
@@ -220,4 +226,3 @@ findSweetType([1, 2])
 isClearValue(false)
 // false
 ```
-

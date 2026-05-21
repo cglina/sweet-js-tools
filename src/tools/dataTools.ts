@@ -1,11 +1,11 @@
-import { isActualObj, isArray } from "../basicTypes.js";
-import type { BaseObject } from "./objectTools.js";
+import { isArray, isObject } from "../basicTypes.js";
+import type { object } from "./objectTools.js";
 
-type DataTypes = string | BaseObject | any[]
+type DataTypes = string | object | any[]
 
 type StringDataFormats = 'csv' | 'json' | 'unknown'
 
-type DataFormats = StringDataFormats | 'baseObjectArray' | 'otherArray' | 'baseObject'
+type DataFormats = StringDataFormats | 'objectArray' | 'otherArray' | 'object'
 
 /**
  * Checks whether a string contains structured JSON data.
@@ -31,7 +31,7 @@ export function isStructuredJSON(input: string): boolean {
 
     try {
         const parsed = JSON.parse(trimmed)
-        return isActualObj(parsed) || Array.isArray(parsed)
+        return isObject(parsed) || Array.isArray(parsed)
     } catch {
         return false
     }
@@ -173,30 +173,30 @@ export function stringDataCheck(input: string): StringDataFormats {
  *
  * Returns:
  * - `"json"` | `"csv"` | `"unknown"` for string inputs (via `stringDataCheck`)
- * - `"baseObjectArray"` for arrays of objects
+ * - `"objectArray"` for arrays of objects
  * - `"otherArray"` for all other arrays
- * - `"baseObject"` for plain objects
+ * - `"object"` for plain objects
  *
  * @example
  * findDataType('{"a":1}') // "json"
  * findDataType("name,age\nLina,32") // "csv"
- * findDataType([{ a: 1 }, { b: 2 }]) // "baseObjectArray"
+ * findDataType([{ a: 1 }, { b: 2 }]) // "objectArray"
  * findDataType([1, 2, 3]) // "otherArray"
- * findDataType({ a: 1 }) // "baseObject"
+ * findDataType({ a: 1 }) // "object"
  * findDataType(123) // "unknown"
  */
 export function findDataType(data: any): DataFormats {
     if (typeof data === "string") return stringDataCheck(data)
 
     if (isArray(data)) {
-        if (data.length > 0 && data.every(item => isActualObj(item))) {
-            return "baseObjectArray"
+        if (data.length > 0 && data.every(item => isObject(item))) {
+            return "objectArray"
         }
 
         return "otherArray"
     }
 
-    if (isActualObj(data)) return "baseObject"
+    if (isObject(data)) return "object"
 
     return "unknown"
 }
@@ -245,7 +245,7 @@ export function findDataType(data: any): DataFormats {
  * csvObjectify("")
  * // []
  */
-export function csvObjectify(csv: string): BaseObject[] {
+export function csvObjectify(csv: string): object[] {
     const rows = csv
         .trim()
         .split("\n")
@@ -259,7 +259,7 @@ export function csvObjectify(csv: string): BaseObject[] {
 
     return rows.slice(1).map(row => {
         const values = splitCSVRow(row)
-        const obj: BaseObject = {}
+        const obj: object = {}
 
         headers.forEach((header, index) => {
             obj[header] = values[index] ?? ""
