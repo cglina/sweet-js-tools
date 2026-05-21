@@ -1,4 +1,4 @@
-import { isActualObj, isArray } from "../basicTypes.js";
+import { isArray, isObject } from "../basicTypes.js";
 /**
  * Checks whether a string contains structured JSON data.
  *
@@ -22,7 +22,7 @@ export function isStructuredJSON(input) {
         return false;
     try {
         const parsed = JSON.parse(trimmed);
-        return isActualObj(parsed) || Array.isArray(parsed);
+        return isObject(parsed) || Array.isArray(parsed);
     }
     catch {
         return false;
@@ -158,29 +158,29 @@ export function stringDataCheck(input) {
  *
  * Returns:
  * - `"json"` | `"csv"` | `"unknown"` for string inputs (via `stringDataCheck`)
- * - `"baseObjectArray"` for arrays of objects
+ * - `"objectArray"` for arrays of objects
  * - `"otherArray"` for all other arrays
- * - `"baseObject"` for plain objects
+ * - `"object"` for plain objects
  *
  * @example
  * findDataType('{"a":1}') // "json"
  * findDataType("name,age\nLina,32") // "csv"
- * findDataType([{ a: 1 }, { b: 2 }]) // "baseObjectArray"
+ * findDataType([{ a: 1 }, { b: 2 }]) // "objectArray"
  * findDataType([1, 2, 3]) // "otherArray"
- * findDataType({ a: 1 }) // "baseObject"
+ * findDataType({ a: 1 }) // "object"
  * findDataType(123) // "unknown"
  */
 export function findDataType(data) {
     if (typeof data === "string")
         return stringDataCheck(data);
     if (isArray(data)) {
-        if (data.length > 0 && data.every(item => isActualObj(item))) {
-            return "baseObjectArray";
+        if (data.length > 0 && data.every(item => isObject(item))) {
+            return "objectArray";
         }
         return "otherArray";
     }
-    if (isActualObj(data))
-        return "baseObject";
+    if (isObject(data))
+        return "object";
     return "unknown";
 }
 /**

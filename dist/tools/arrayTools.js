@@ -209,7 +209,7 @@ export function paginationSlices(array, partLength = 3) {
 }
 ///////////// TYPE FILTERING & REPLACING
 /**
- * Returns only the items that match a given Sweet Base Type.
+ * Returns only the items that match a given SweetType.
  *
  * Returns an empty array if the array is empty.
  *
@@ -222,7 +222,7 @@ export function includeType(arr = [], typeFilter = 'string') {
     return arr.filter(item => sweetTypeCheck(item, typeFilter));
 }
 /**
- * Returns only the items that do not match a given Sweet Base Type.
+ * Returns only the items that do not match a given SweetType.
  *
  * Returns an empty array if the array is empty.
  *
@@ -235,7 +235,7 @@ export function excludeType(arr = [], typeFilter = 'string') {
     return arr.filter(item => !sweetTypeCheck(item, typeFilter));
 }
 /**
- * Returns each item if it matches a given Sweet Base Type.
+ * Returns each item if it matches a given SweetType.
  *
  * If an item does not match, it is replaced with `falseDefault`.
  * Returns an empty array if the array is empty.

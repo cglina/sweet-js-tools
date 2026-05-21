@@ -1,26 +1,20 @@
 /**
  * Standard base type names supported by Sweet Types.
  *
- * - These mostly follow JavaScript `typeof` behavior
- * - However, Sweet Types may apply small practical adjustments
- *   (e.g. excluding `NaN` from valid `number` checks)
- *
- * Notes:
- * - `object` includes arrays (JavaScript behavior)
- * - `null` is separated because `typeof null === "object"`
+ * These mostly follow JavaScript `typeof` behavior, with a few additions:
+ * - `array`: `object` & `array` are considered distinct types
+ * - `null`: in JS, would return type `object`; SweetTypes names `null` as a distinct type
  */
-export type BaseTypes = 'string' | 'object' | 'number' | 'symbol' | 'boolean' | 'function' | 'bigint' | 'undefined' | 'null';
+export type BaseTypes = 'string' | 'object' | 'number' | 'array' | 'symbol' | 'boolean' | 'function' | 'bigint' | 'undefined' | 'null';
 /**
  * More specific Sweet type names used to narrow common JavaScript edge cases.
  *
  * Includes:
- * - `array` — value is an array
- * - `actualObj` — value is a non-null object and not an array
  * - `true` — value is exactly `true`
  * - `false` — value is exactly `false`
- * - `numeric` — value is a number or numeric string
+ * - `numeric` — value is a numeric string
  */
-export type PrecisionTypes = 'array' | 'actualObj' | 'true' | 'false' | 'numeric';
+export type PrecisionTypes = 'true' | 'false' | 'numeric';
 /**
  * Strict/non-empty Sweet type names.
  *
@@ -28,7 +22,7 @@ export type PrecisionTypes = 'array' | 'actualObj' | 'true' | 'false' | 'numeric
  *
  * - `stringX` — string with length > 0
  * - `arrayX` — array with length > 0
- * - `objectX` — actual object with at least one key-value pair
+ * - `objectX` — non-array object with at least one key-value pair
  * - `numberX` — valid number that is not `0` (or `NaN`)
  * - `symbolX` - symbol with description, ie: Symbol() returns false
  */
@@ -59,25 +53,24 @@ export declare function isString(item: any): item is string;
  */
 export declare function isBoolean(item: any): item is boolean;
 /**
- * Returns true if the value is a non-null object.
+ * Returns true if the value is a non-null, non-array object.
  *
- * Arrays also return true.
+ * Arrays return false because Sweet Types treats `array`
+ * as its own base type.
  *
  * @example
  * isObject({ a: 1 })
- *
  * // true
  *
  * isObject([1, 2])
- *
- * // true
+ * // false
  */
 export declare function isObject(item: any): item is object;
 /**
  * Returns `true` if the value is a valid number.
  *
  * Unlike JavaScript's raw `typeof` behavior, this returns `false` for `NaN`
- * because `NaN` is not useful as a usable number value.
+ * because `NaN` cannot be used as a valid numeric value.
  *
  * @example
  * isNumber(12)
@@ -132,22 +125,6 @@ export declare function isUndefined(item: any): item is undefined;
  */
 export declare function isNull(item: any): item is null;
 /**
- * Returns `true` if the value is an object but not an array.
- *
- * An `actualObj` means:
- * - the value is a non-null object
- * - and it is not an array
- *
- * @example
- * isActualObj({ a: 1 })
- * // true
- * isActualObj([1, 2])
- * // false
- * isActualObj(null)
- * // false
- */
-export declare function isActualObj(item: any): item is Record<string, any>;
-/**
  * Returns `true` if the value is an array.
  *
  * @example
@@ -197,40 +174,36 @@ export declare function isArray(item: any): item is any[];
  */
 export declare function isFunction(item: any): item is Function;
 /**
- * Returns `true` if the value is numeric.
- *
- * A `numeric` value means:
- * - a valid number (not `NaN`)
- * - or a string that can be converted to a valid number
+ * Returns `true` if a string is a valid numeric representation.
  *
  * Includes:
- * - integers, floats, scientific notation (`"1e3"`)
+ * - integers
+ * - floats
+ * - scientific notation (`"1e3"`)
  * - strings with surrounding whitespace
  *
  * Excludes:
- * - empty strings or whitespace-only strings
+ * - empty strings
+ * - whitespace-only strings
  * - non-numeric strings
  *
  * @example
- * isNumeric(12)
- * // true
- *
  * isNumeric("12")
  * // true
  *
+ * @example
  * isNumeric("  12  ")
  * // true
  *
+ * @example
  * isNumeric("1e3")
  * // true
  *
+ * @example
  * isNumeric("lala")
  * // false
- *
- * isNumeric("")
- * // false
  */
-export declare function isNumeric(item: any): item is string | number;
+export declare function isNumeric(item: any): item is string;
 /**
  * Returns `true` if the value is exactly `true`.
  *
@@ -300,7 +273,7 @@ export declare function isStringX(item: any): item is string;
  */
 export declare function isSymbolX(item: any): item is symbol;
 /**
- * Returns `true` if the value is a non-empty actual object.
+ * Returns `true` if the value is a non-empty object (not array!).
  *
  * An `objectX` means:
  * - the value is a non-null object
@@ -425,7 +398,7 @@ export declare function findSweetType(item: any): SweetBaseTypes;
  * - `null`
  * - `undefined`
  *
- * Unlike `isUsable`, this does not treat empty strings,
+ * Unlike `isEmptyVal` or `isClearValue`, this does not treat empty strings,
  * empty arrays, empty objects, `0`, or `false` as nullish.
  *
  * @example
@@ -448,7 +421,7 @@ export declare function findSweetType(item: any): SweetBaseTypes;
  */
 export declare function isNullish(item: any): boolean;
 /**
- * Checks whether a value matches any supported Sweet base type.
+ * Checks whether a value matches any supported Sweet type.
  *
  * This is the main dispatcher for `SweetBaseTypes`.
  *
@@ -474,9 +447,6 @@ export declare function isNullish(item: any): boolean;
  * sweetTypeCheck([], "array")
  * // true
  *
- * sweetTypeCheck({}, "actualObj")
- * // true
- *
  * sweetTypeCheck("12", "numeric")
  * // true
  *
@@ -493,7 +463,7 @@ export declare function sweetTypeCheck(item: any, sweetType: SweetBaseTypes): bo
  * - empty or whitespace-only strings
  * - `0`
  * - empty arrays
- * - empty actual objects
+ * - empty (non-array) objects
  *
  * Values like `false`, functions, symbols, and bigints are not treated as empty.
  *
@@ -528,7 +498,7 @@ export declare function isEmptyVal(value: any): boolean;
  * - non-empty string
  * - non-zero number
  * - non-empty array
- * - non-empty actual object
+ * - non-empty object (not array!)
  * - boolean `true`
  *
  * Values like `false`, `0`, empty strings, empty arrays,

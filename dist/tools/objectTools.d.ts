@@ -94,7 +94,7 @@ export declare function fixEmptyVals(obj: BaseObject, mode?: EmptyValMode): Base
  * - empty or whitespace-only strings
  * - `0`
  * - empty arrays
- * - empty actual objects
+ * - empty objects
  *
  * Returns `[]` if the input is nullish.
  *

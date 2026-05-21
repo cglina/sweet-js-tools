@@ -1,5 +1,5 @@
 import { isArray, isObject } from "../basicTypes.js";
-import type { object } from "./objectTools.js";
+import type { BaseObject } from "./objectTools.js";
 
 type DataTypes = string | object | any[]
 
@@ -245,7 +245,7 @@ export function findDataType(data: any): DataFormats {
  * csvObjectify("")
  * // []
  */
-export function csvObjectify(csv: string): object[] {
+export function csvObjectify(csv: string): BaseObject[] {
     const rows = csv
         .trim()
         .split("\n")
@@ -259,7 +259,7 @@ export function csvObjectify(csv: string): object[] {
 
     return rows.slice(1).map(row => {
         const values = splitCSVRow(row)
-        const obj: object = {}
+        const obj: BaseObject = {}
 
         headers.forEach((header, index) => {
             obj[header] = values[index] ?? ""

@@ -163,7 +163,7 @@ export declare function trimExtra(text?: string): string;
  *
  * @example
  * normalizeString("München Straße")
- * // "munchen strasse"
+ * // "Munchen Strasse"
  *
  * @example
  * normalizeString("  Olá   mundo  ")
@@ -190,7 +190,7 @@ export declare function normalizeString(str: string, cleanSpacing?: boolean): st
  *
  * @example
  * normalizeText("München Straße")
- * // "munchen strasse"
+ * // "Munchen Strasse"
  *
  * @example
  * normalizeText("  Olá   mundo  ")

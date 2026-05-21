@@ -1,6 +1,6 @@
 import type { BaseObject } from "./objectTools.js";
 type StringDataFormats = 'csv' | 'json' | 'unknown';
-type DataFormats = StringDataFormats | 'baseObjectArray' | 'otherArray' | 'baseObject';
+type DataFormats = StringDataFormats | 'objectArray' | 'otherArray' | 'object';
 /**
  * Checks whether a string contains structured JSON data.
  *
@@ -97,16 +97,16 @@ export declare function stringDataCheck(input: string): StringDataFormats;
  *
  * Returns:
  * - `"json"` | `"csv"` | `"unknown"` for string inputs (via `stringDataCheck`)
- * - `"baseObjectArray"` for arrays of objects
+ * - `"objectArray"` for arrays of objects
  * - `"otherArray"` for all other arrays
- * - `"baseObject"` for plain objects
+ * - `"object"` for plain objects
  *
  * @example
  * findDataType('{"a":1}') // "json"
  * findDataType("name,age\nLina,32") // "csv"
- * findDataType([{ a: 1 }, { b: 2 }]) // "baseObjectArray"
+ * findDataType([{ a: 1 }, { b: 2 }]) // "objectArray"
  * findDataType([1, 2, 3]) // "otherArray"
- * findDataType({ a: 1 }) // "baseObject"
+ * findDataType({ a: 1 }) // "object"
  * findDataType(123) // "unknown"
  */
 export declare function findDataType(data: any): DataFormats;
