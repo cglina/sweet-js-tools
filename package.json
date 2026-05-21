@@ -1,21 +1,21 @@
 {
   "name": "sweet-js-tools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A library of simple, practical and efficient JavaScript/TypeScript utilities to streamline JS development.",
   "keywords": [
     "sweet",
     "tools",
     "js",
     "javascript",
-  "typescript",
-  "utilities",
-  "helpers",
-  "array",
-  "string",
-  "number",
-  "object",
-  "data"
-],
+    "typescript",
+    "utilities",
+    "helpers",
+    "array",
+    "string",
+    "number",
+    "object",
+    "data"
+  ],
   "homepage": "https://github.com/cglina/sweet-js-tools#readme",
   "bugs": {
     "url": "https://github.com/cglina/sweet-js-tools/issues"
@@ -35,8 +35,8 @@
     "LICENSE"
   ],
   "scripts": {
-  "build": "tsc",
-  "check": "tsc --noEmit"
+    "build": "tsc",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "5.8 - 6.0"
@@ -46,5 +46,5 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
-}
+  }
 }
