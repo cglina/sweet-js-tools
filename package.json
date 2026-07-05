@@ -46,5 +46,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
+  },
+  "dependencies": {
+    "sweet-type-tools": "^1.0.0"
   }
 }

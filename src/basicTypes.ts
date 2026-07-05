@@ -1,24 +1,14 @@
+import type { BaseTypeName, BaseTypeNames } from "sweet-type-tools";
 
 /*
  * SWEET TYPE SYSTEM OVERVIEW:
  *
- * BaseTypes      → raw categories (string, number, object, array, etc.)
- * PrecisionTypes → refined checks (numeric, true/false)
- * XTypes         → usable values (non-empty, non-zero, etc.)
+ * Base      → raw categories (string, number, object, array, etc.)
+ * Precision → refined checks (numeric, true/false)
+ * X         → usable values (non-empty, non-zero, etc.)
  *
  * sweetTypeCheck → unified entry point
  */
-
-
-/**
- * Standard base type names supported by Sweet Types.
- *
- * These mostly follow JavaScript `typeof` behavior, with a few additions:
- * - `array`: `object` & `array` are considered distinct types
- * - `null`: in JS, would return type `object`; SweetTypes names `null` as a distinct type
- */
-
-export type BaseTypes = 'string' | 'object' | 'number' | 'array' | 'symbol' | 'boolean' | 'function' | 'bigint' | 'undefined' | 'null'
 
 /**
  * More specific Sweet type names used to narrow common JavaScript edge cases.
@@ -46,7 +36,7 @@ export type XTypes = 'stringX' | 'objectX' | 'arrayX' | 'numberX' | 'symbolX'
 /**
  * Runtime list of supported base type names.
  */
-const baseTypeArray: BaseTypes[] = [
+const baseTypeArray: BaseTypeNames = [
     "string",
     "object",
     "number",
@@ -74,7 +64,7 @@ const xTypeArray: XTypes[] = ['stringX', 'objectX', 'numberX', 'arrayX', 'symbol
  * 
  * Includes both standard JS base types and foundational Sweet semantic types.
  */
-export type SweetBaseTypes = BaseTypes | PrecisionTypes | XTypes
+export type SweetBaseTypes = BaseTypeName | PrecisionTypes | XTypes
 
 export type SweetTypeList = SweetBaseTypes[]
 
@@ -459,7 +449,7 @@ export function isNumberX(item: any): item is number {
 
 // helper for 'findSweetType'
 const sweetTypeFinder = {
-    string: (item: string) => isStringX(item) ? 'stringX' : 'string',
+    string: (item: string) => isNumeric(item) ? 'numeric' : isStringX(item) ? 'stringX' : 'string',
     number: (item: number) => isNumberX(item) ? 'numberX' : 'number',
     array: (item: any[]) => isArrayX(item) ? 'arrayX' : 'array',
     object: (item: Record<string, any>) => isObjectX(item) ? 'objectX' : 'object',
@@ -531,6 +521,7 @@ const sweetTypeFinder = {
  * @example
  * findSweetType(null) // "null"
  */
+
 export function findSweetType(item: any): SweetBaseTypes {
     const adaptType =
         item === null
@@ -542,37 +533,7 @@ export function findSweetType(item: any): SweetBaseTypes {
     return sweetTypeFinder[adaptType](item as never) as SweetBaseTypes
 }
 
-/**
- * Returns `true` if the value is `null` or `undefined`.
- *
- * This follows the standard JavaScript meaning of "nullish":
- * - `null`
- * - `undefined`
- *
- * Unlike `isEmptyVal` or `isClearValue`, this does not treat empty strings,
- * empty arrays, empty objects, `0`, or `false` as nullish.
- *
- * @example
- * isNullish(null) // true
- *
- * @example
- * isNullish(undefined) // true
- *
- * @example
- * isNullish("") // false
- *
- * @example
- * isNullish(0) // false
- *
- * @example
- * isNullish(false) // false
- *
- * @example
- * isNullish([]) // false
- */
-export function isNullish(item: any): boolean {
-    return item === null || item === undefined
-}
+
 
 /**
  * Checks whether a value matches a given Sweet base type.
@@ -600,7 +561,7 @@ export function isNullish(item: any): boolean {
  * baseTypeCheck([], "array")
  * // true
  */
-function baseTypeCheck(item: any, baseType: BaseTypes): boolean {
+function baseTypeCheck(item: any, baseType: BaseTypeName): boolean {
     if (baseType === 'null') return item === null
     if (baseType === "object") return isObject(item)
     if (baseType === "array") return isArray(item)
@@ -642,8 +603,8 @@ function baseTypeCheck(item: any, baseType: BaseTypes): boolean {
  * // true
  */
 export function sweetTypeCheck(item: any, sweetType: SweetBaseTypes): boolean {
-    if (baseTypeArray.includes(sweetType as BaseTypes)) {
-        return baseTypeCheck(item, sweetType as BaseTypes)
+    if (baseTypeArray.includes(sweetType as BaseTypeName)) {
+        return baseTypeCheck(item, sweetType as BaseTypeName)
     }
 
     if (precisionTypeArray.includes(sweetType as PrecisionTypes)) {
@@ -740,50 +701,6 @@ function precisionTypeCheck(item: any, precisionType: PrecisionTypes): boolean {
     return precisionChecks[precisionType](item)
 }
 
-/**
- * Returns `true` if a value is considered empty by Sweet value rules.
- *
- * Empty values include:
- * - `null`
- * - `undefined`
- * - empty or whitespace-only strings
- * - `0`
- * - empty arrays
- * - empty (non-array) objects
- *
- * Values like `false`, functions, symbols, and bigints are not treated as empty.
- *
- * @example
- * isEmptyVal("") // true
- * isEmptyVal("   ") // true
- * isEmptyVal("hello") // false
- *
- * @example
- * isEmptyVal(0) // true
- * isEmptyVal(5) // false
- *
- * @example
- * isEmptyVal([]) // true
- * isEmptyVal([1]) // false
- *
- * @example
- * isEmptyVal({}) // true
- * isEmptyVal({ a: 1 }) // false
- *
- * @example
- * isEmptyVal(null) // true
- * isEmptyVal(undefined) // true
- * isEmptyVal(false) // false
- */
-export function isEmptyVal(value: any): boolean {
-    if (isNullish(value)) return true
-    if (isString(value)) return !isStringX(value)
-    if (isNumber(value)) return !isNumberX(value)
-    if (isArray(value)) return !isArrayX(value)
-    if (isObject(value)) return !isObjectX(value)
-
-    return false
-}
 
 /**
  * Returns `true` if a value is considered clear/meaningful by Sweet value rules.
