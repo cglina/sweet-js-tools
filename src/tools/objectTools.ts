@@ -1,4 +1,4 @@
-import { findSweetType, isClearValue, isEmptyVal, isNullish, isObject, isObjectX } from "../basicTypes.js";
+import { sweetType, isClearValue, isEmptyVal, isNullish, isObject, objectX } from "../basicTypes.js";
 
 export type BaseObject = Record<string, any>
 type TypesCheckReturn = Record<string, string> | string[][]
@@ -59,7 +59,7 @@ export function objEntryTypes(
 ): TypesCheckReturn {
 
     // checks if obj isn't empty
-    if (!isObjectX(obj)) {
+    if (!objectX(obj)) {
         return returnType === 'array' ? [] : {}
     }
 
@@ -110,7 +110,7 @@ type EmptyValMode =
  * // { name: "empty string", birthyear: "empty number" }
  */
 export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): BaseObject {
-    if (!isObjectX(obj)) return {}
+    if (!objectX(obj)) return {}
 
     const result: BaseObject = {}
 
@@ -128,7 +128,7 @@ export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): Ba
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${findSweetType(value)}`
+            result[key] = `empty ${sweetType(value)}`
             return
         }
 
@@ -273,7 +273,7 @@ export function cleanValues(obj: BaseObject): any[] {
  * // { name: "empty string", active: "empty false" }
  */
 export function fixEmptyX(obj: BaseObject, mode: EmptyValMode = "remove"): BaseObject {
-    if (!isObjectX(obj)) return {}
+    if (!objectX(obj)) return {}
 
     const result: BaseObject = {}
 
@@ -291,7 +291,7 @@ export function fixEmptyX(obj: BaseObject, mode: EmptyValMode = "remove"): BaseO
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${findSweetType(value)}`
+            result[key] = `empty ${sweetType(value)}`
             return
         }
 
@@ -336,7 +336,7 @@ export function fixEmptyX(obj: BaseObject, mode: EmptyValMode = "remove"): BaseO
  * // []
  */
 export function clearObjEntries(obj: BaseObject): [string, any][] {
-    if (!isObjectX(obj)) return []
+    if (!objectX(obj)) return []
 
     const clearObj = fixEmptyX(obj, 'remove')
 
@@ -371,7 +371,7 @@ export function clearObjEntries(obj: BaseObject): [string, any][] {
  * // []
  */
 export function clearObjKeys(obj: BaseObject): string[] {
-    if (!isObjectX(obj)) return []
+    if (!objectX(obj)) return []
 
     const clearObj = fixEmptyX(obj, 'remove')
 
@@ -406,7 +406,7 @@ export function clearObjKeys(obj: BaseObject): string[] {
  * // []
  */
 export function clearObjValues(obj: BaseObject): any[] {
-    if (!isObjectX(obj)) return []
+    if (!objectX(obj)) return []
 
     const clearObj = fixEmptyX(obj, 'remove')
 

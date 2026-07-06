@@ -48,6 +48,6 @@
     }
   },
   "dependencies": {
-    "sweet-type-tools": "^1.0.0"
+    "sweet-type-tools": "^1.0.1"
   }
 }

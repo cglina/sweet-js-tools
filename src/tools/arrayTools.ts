@@ -269,7 +269,7 @@ export function excludeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'stri
  * Returns an empty array if the array is empty.
  * 
  * @example
- * typeOrDefault([1, "hello", 0], "numberX", false) → [1, false, false]
+ * typeOrDefault([1, "hello", 0], "number", false) → [1, false, false]
  * typeOrDefault([3, "lala"], "string", 0) → [0, "lala"]
  */
 export function typeOrDefault<T, D = false>(
@@ -282,12 +282,12 @@ export function typeOrDefault<T, D = false>(
 }
 
 /**
- * Returns an array of booleans indicating whether each item matches a given Sweet Base Type.
+ * Returns an array of booleans indicating whether each item matches a given TypeTools.
  * 
  * Returns an empty array if the array is empty.
  * 
  * @example
- * typeMatchMap([1, "hello", 0], "numberX") → [true, false, false]
+ * typeMatchMap([1, "hello", 0], "number") → [true, false, false]
  * typeMatchMap([1, "hello", 0], "number") → [true, false, true]
  */
 export function typeMatchMap<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'string'): boolean[] {

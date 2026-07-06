@@ -20,7 +20,7 @@ Refined and simplified the internal SweetTypes system.
   - `PrecisionTypes`
   - `XTypes`
 - simplified Sweet type hierarchy and terminology
-- updated `findSweetType` behavior to align with new object/array separation
+- updated `sweetType` behavior to align with new object/array separation
 - improved runtime type dispatching and internal type checks
 
 ### Docs & tooling
