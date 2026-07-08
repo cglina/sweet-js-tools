@@ -242,7 +242,8 @@ export function paginationSlices(array: any[], partLength: number = 3): number[]
  * Returns an empty array if the array is empty.
  * 
  * @example
- * includeType([1, "hello", 0, ""], "stringX") → ["hello"]
+ * includeType([1, "hello", 0, ""], "string") → ["hello"]
+ * includeType([1, "hello", 0, ""], "numberX") → [0]
  */
 export function includeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): T[] {
     if (arr.length === 0) return []
@@ -255,7 +256,7 @@ export function includeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'
  * Returns an empty array if the array is empty.
  * 
  * @example
- * excludeType([1, "hello", 0, ""], "stringX") → [1, 0, ""]
+ * excludeType([1, "hello", 0, ""], "stringX") → [1, 0, "hello"]
  */
 export function excludeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): T[] {
     if (arr.length === 0) return []

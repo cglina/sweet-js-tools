@@ -89,11 +89,11 @@ export {
 
 /////////////// ADAPT IMPORTS ///////////////
 
-import { isNumeric, isNullish } from "sweet-type-tools"
+import { isNumeric, isNullish, isEmptyVal } from "sweet-type-tools"
 
 /////////////// ADAPT EXPORTS ///////////////
 
-export { isNumeric, isNullish } from "sweet-type-tools"
+export { isNumeric, isNullish, isEmptyVal } from "sweet-type-tools"
 
 /////////////// OTHER CHECKS ///////////////
 

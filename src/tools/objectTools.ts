@@ -1,4 +1,4 @@
-import { TypeTools, isClearValue, isEmptyVal, isNullish, isObject, objectX } from "../basicTypes.js";
+import { sweetType, isClearValue, isEmptyVal, isNullish, isObject, objectX } from "../basicTypes.js";
 
 export type BaseObject = Record<string, any>
 type TypesCheckReturn = Record<string, string> | string[][]
@@ -128,7 +128,7 @@ export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): Ba
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${TypeTools(value)}`
+            result[key] = `empty ${sweetType(value)}`
             return
         }
 
@@ -291,7 +291,7 @@ export function fixEmptyX(obj: BaseObject, mode: EmptyValMode = "remove"): BaseO
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${TypeTools(value)}`
+            result[key] = `empty ${sweetType(value)}`
             return
         }
 

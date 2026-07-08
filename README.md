@@ -201,7 +201,7 @@ Includes:
 
 - base type checks: `isString`, `isNumber`, `isBoolean`, `isObject`, `isArray`, `isNull`, `isUndefined`, `isBigint`, `isFunction`, `isSymbol`
 - precision checks: `isTrue`, `isFalse`, `isNumeric`
-- strict/usable checks (`XTypes`): `stringX`, `objectX`, `arrayX`, `numberX`, `symbolX`
+- strict/usable checks, where empty/less meaningful values return an `XType`: `stringX`, `objectX`, `arrayX`, `numberX`, `symbolX`
 - value state helpers: `isNullish`, `isEmptyVal`, `isClearValue`
 - type inspection helpers: `sweetType`
 - unified type checking: `sweetTypeCheck`
@@ -221,6 +221,9 @@ isArray([1, 2])
 // true
 
 sweetType([1, 2])
+// "array"
+
+sweetType([])
 // "arrayX"
 
 isClearValue(false)
