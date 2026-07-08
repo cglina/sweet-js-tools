@@ -34,6 +34,8 @@ The library provides a set of tools and common operations for `arrays`, `numbers
 npm install sweet-js-tools
 ```
 
+**Sweet JS Tools** is built on top of **Sweet TypeTools**, which is installed automatically as a dependency.
+
 ## Contents
 
 <a name="string-tools"></a>
@@ -71,8 +73,6 @@ Utilities for creating, filtering, sorting & working with arrays.
 - access and selection: `arrayLast`, `randomArrayItem`
 - cleanup and structure: `removeDuplicates`, `arrayParts`, `paginationSlices`
 - type-based filtering (Sweet Types): `includeType`, `excludeType`, `typeOrDefault`, `typeMatchMap`
-- random selection: `randomArrayItem`
-- pagination helpers: `paginationSlices`
 
 #### Example usage:
 ```js
@@ -181,30 +181,32 @@ csvToJSON("name,age\nLina,32")
 ```
 
 ##
-### 🍬 Basic *TypeTools*
+### 🍬 TypeTools
 
-A lightweight runtime type system designed for **plain JavaScript and TypeScript**.
+Sweet JS Tools re-exports the most commonly used runtime utilities from **Sweet TypeTools**, allowing them to be used directly alongside the other Sweet JS helpers.
 
-> **Important:**  
-> This is the **basic/internal** TypeTools layer included with Sweet JS Tools.  
-> It works entirely at runtime and **does NOT require TypeScript**.
->
-> A more advanced standalone **Sweet Types** system is planned separately.
+TypeTools extends JavaScript's native runtime typing with:
 
-TypeTools expands normal JavaScript type checks with:
-- safer runtime validation
-- more specific checks
-- “usable value” detection
-- cleaner handling of common JS edge cases
+- **Base** type detection
+- **X** value refinement
+- **Adapt** helpers for interpretation and conversion
+
+Additional Sweet JS Tools helpers:
+
+- `isTrue`
+- `isFalse`
+- `isClearValue`
 
 Includes:
 
-- base type checks: `isString`, `isNumber`, `isBoolean`, `isObject`, `isArray`, `isNull`, `isUndefined`, `isBigint`, `isFunction`, `isSymbol`
-- precision checks: `isTrue`, `isFalse`, `isNumeric`
-- strict/usable checks, where empty/less meaningful values return an `XType`: `stringX`, `objectX`, `arrayX`, `numberX`, `symbolX`
-- value state helpers: `isNullish`, `isEmptyVal`, `isClearValue`
-- type inspection helpers: `sweetType`
-- unified type checking: `sweetTypeCheck`
+- **Base** type checks: `isString`, `isNumber`, `isBoolean`, `isObject`, `isArray`, `isNull`, `isUndefined`, `isBigint`, `isFunction`, `isSymbol`
+- **Base** type resolution: `sweetType`
+- **X** value refinement: `stringX`, `objectX`, `arrayX`, `numberX`, `symbolX`
+- **X** type resolution: `sweetX`, `sweetXCheck`
+- **Adapt** helpers: `isNumeric`, `isNullish`, `isEmptyVal`
+- **Sweet JS additions:** `isTrue`, `isFalse`, `isClearValue`
+
+For the complete runtime type system and documentation, see the standalone **Sweet TypeTools** package.
 
 #### Example usage:
 ```js
@@ -224,6 +226,9 @@ sweetType([1, 2])
 // "array"
 
 sweetType([])
+// "array"
+
+sweetX([])
 // "arrayX"
 
 isClearValue(false)
