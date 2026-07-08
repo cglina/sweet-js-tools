@@ -1,7 +1,7 @@
 /// STELLA OK!
 
 import { absValueFloor, randomNr0 } from "./numberTools.js";
-import { sweetTypeCheck, type SweetBaseTypes } from "../basicTypes.js";
+import { sweetXCheck, type SweetXLabel } from "../basicTypes.js";
 
 /**
  * Creates a number sequence from a positive or negative number.
@@ -237,33 +237,33 @@ export function paginationSlices(array: any[], partLength: number = 3): number[]
 ///////////// TYPE FILTERING & REPLACING
 
 /**
- * Returns only the items that match a given SweetType.
+ * Returns only the items that match a given TypeTools type.
  * 
  * Returns an empty array if the array is empty.
  * 
  * @example
  * includeType([1, "hello", 0, ""], "stringX") → ["hello"]
  */
-export function includeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'string'): T[] {
+export function includeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): T[] {
     if (arr.length === 0) return []
-    return arr.filter(item => sweetTypeCheck(item, typeFilter))
+    return arr.filter(item => sweetXCheck(item, typeFilter))
 }
 
 /**
- * Returns only the items that do not match a given SweetType.
+ * Returns only the items that do not match a given TypeTools.
  * 
  * Returns an empty array if the array is empty.
  * 
  * @example
  * excludeType([1, "hello", 0, ""], "stringX") → [1, 0, ""]
  */
-export function excludeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'string'): T[] {
+export function excludeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): T[] {
     if (arr.length === 0) return []
-    return arr.filter(item => !sweetTypeCheck(item, typeFilter))
+    return arr.filter(item => !sweetXCheck(item, typeFilter))
 }
 
 /**
- * Returns each item if it matches a given SweetType.
+ * Returns each item if it matches a given TypeTools.
  * 
  * If an item does not match, it is replaced with `falseDefault`.
  * Returns an empty array if the array is empty.
@@ -274,11 +274,11 @@ export function excludeType<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'stri
  */
 export function typeOrDefault<T, D = false>(
     arr: T[] = [],
-    typeFilter: SweetBaseTypes = 'string',
+    typeFilter: SweetXLabel = 'string',
     falseDefault: D = false as D
 ): (T | D)[] {
     if (arr.length === 0) return []
-    return arr.map(item => sweetTypeCheck(item, typeFilter) ? item : falseDefault)
+    return arr.map(item => sweetXCheck(item, typeFilter) ? item : falseDefault)
 }
 
 /**
@@ -290,7 +290,7 @@ export function typeOrDefault<T, D = false>(
  * typeMatchMap([1, "hello", 0], "number") → [true, false, false]
  * typeMatchMap([1, "hello", 0], "number") → [true, false, true]
  */
-export function typeMatchMap<T>(arr: T[] = [], typeFilter: SweetBaseTypes = 'string'): boolean[] {
+export function typeMatchMap<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): boolean[] {
     if (arr.length === 0) return []
-    return arr.map(item => sweetTypeCheck(item, typeFilter))
+    return arr.map(item => sweetXCheck(item, typeFilter))
 }

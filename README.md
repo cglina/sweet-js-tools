@@ -13,7 +13,7 @@ A library of **practical** & **reusable** utilities designed to **streamline eve
   - [Number tools](#number-tools)
   - [Object tools](#-object-tools)
   - [Data tools](#data-tools)
-  - [*SweetTypes* (basic)](#-basic-sweettypes)
+  - [*TypeTools* (basic)](#-basic-typetools)
 
 ## Overview ✨
 
@@ -181,17 +181,17 @@ csvToJSON("name,age\nLina,32")
 ```
 
 ##
-### 🍬 Basic *SweetTypes*
+### 🍬 Basic *TypeTools*
 
 A lightweight runtime type system designed for **plain JavaScript and TypeScript**.
 
 > **Important:**  
-> This is the **basic/internal** SweetTypes layer included with Sweet JS Tools.  
+> This is the **basic/internal** TypeTools layer included with Sweet JS Tools.  
 > It works entirely at runtime and **does NOT require TypeScript**.
 >
 > A more advanced standalone **Sweet Types** system is planned separately.
 
-SweetTypes expands normal JavaScript type checks with:
+TypeTools expands normal JavaScript type checks with:
 - safer runtime validation
 - more specific checks
 - “usable value” detection

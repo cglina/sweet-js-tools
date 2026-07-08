@@ -26,7 +26,8 @@ export {
 import type {
     BaseTypeLabel,
     BaseTypeLabels,
-    XNames
+    SweetXLabel,
+    SweetXLabels
 } from "sweet-type-tools"
 
 export type { BaseTypeLabel, BaseTypeLabels }
@@ -41,6 +42,6 @@ export {
     symbolX,
     sweetX,
     sweetXCheck,
-    xNameList
+    SweetXList
 } from "sweet-type-tools"
 
