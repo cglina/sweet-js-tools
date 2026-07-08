@@ -115,7 +115,6 @@ export function sortNumbers(numArray?: number[]): number[] {
     if (!numArray || numArray.length === 0) {
         return []
     }
-    function sortNrs(a: number, b: number) { return a - b }
     return [...numArray].sort((a, b) => a - b)
 }
 
@@ -251,7 +250,7 @@ export function includeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'
 }
 
 /**
- * Returns only the items that do not match a given TypeTools.
+ * Returns only the items that do not match a given TypeTools type.
  * 
  * Returns an empty array if the array is empty.
  * 
@@ -264,7 +263,7 @@ export function excludeType<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'
 }
 
 /**
- * Returns each item if it matches a given TypeTools.
+ * Returns each item if it matches a given TypeTools type.
  * 
  * If an item does not match, it is replaced with `falseDefault`.
  * Returns an empty array if the array is empty.
@@ -283,13 +282,13 @@ export function typeOrDefault<T, D = false>(
 }
 
 /**
- * Returns an array of booleans indicating whether each item matches a given TypeTools.
+ * Returns an array of booleans indicating whether each item matches a given TypeTools type.
  * 
  * Returns an empty array if the array is empty.
  * 
  * @example
  * typeMatchMap([1, "hello", 0], "number") → [true, false, false]
- * typeMatchMap([1, "hello", 0], "number") → [true, false, true]
+ * typeMatchMap([1, "hello", 0], "numberX") → [false, false, true]
  */
 export function typeMatchMap<T>(arr: T[] = [], typeFilter: SweetXLabel = 'string'): boolean[] {
     if (arr.length === 0) return []

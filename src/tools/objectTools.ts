@@ -128,7 +128,9 @@ export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): Ba
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${sweetType(value)}`
+            result[key] = Number.isNaN(value)
+                ? "empty number"
+                : `empty ${sweetType(value)}`
             return
         }
 
@@ -174,14 +176,11 @@ export function fixEmptyVals(obj: BaseObject, mode: EmptyValMode = "remove"): Ba
  *
  * @example
  * cleanEntries(null)
- * // [[]]
+ * // []
  */
-export function cleanEntries(obj: BaseObject): [string, any][] | [[]] {
-    if (isNullish(obj)) return [[]]
-
-    const cleanObj = fixEmptyVals(obj, "remove")
-
-    return Object.entries(cleanObj)
+export function cleanEntries(obj: BaseObject): [string, any][] {
+    if (isNullish(obj)) return []
+    return Object.entries(fixEmptyVals(obj, "remove"))
 }
 
 /**
@@ -291,7 +290,9 @@ export function fixEmptyX(obj: BaseObject, mode: EmptyValMode = "remove"): BaseO
         }
 
         if (mode === "emptyType") {
-            result[key] = `empty ${sweetType(value)}`
+            result[key] = Number.isNaN(value)
+                ? "empty number"
+                : `empty ${sweetType(value)}`
             return
         }
 
@@ -426,7 +427,7 @@ export function clearObjValues(obj: BaseObject): any[] {
  *
  * Returns:
  * - a new filtered object
- * - `{}` if the input is nullish
+ * - `{}` if the input is not an object.
  * - `{}` if no entries pass the filter
  *
  * Does not mutate the original object.
@@ -496,7 +497,8 @@ export function objFilter(
  * If the mapping function throws for an entry, the original key is kept.
  *
  * Does not mutate the original object.
- * Returns `{}` if the input is nullish.
+ * 
+ * Returns `{}` if the input is not an object.
  *
  * @example
  * objModKeys(
@@ -517,7 +519,7 @@ export function objModKeys(
     modMethod: (key: string, value: any) => string =
         (key) => key
 ): BaseObject {
-    if (isNullish(obj)) return {}
+    if (!isObject(obj)) return {}
 
     const result = Object.entries(obj).map(([key, value]) => {
         try {
@@ -538,7 +540,7 @@ export function objModKeys(
  * If the mapping function throws for an entry, the original value is kept.
  *
  * Does not mutate the original object.
- * Returns `{}` if the input is nullish.
+ *  Returns `{}` if the input is not an object.
  *
  * @example
  * objModVals(
@@ -559,7 +561,7 @@ export function objModVals(
     modMethod: (key: string, value: any) => any =
         (_key, value) => value
 ): BaseObject {
-    if (isNullish(obj)) return {}
+    if (!isObject(obj)) return {}
 
     const result = Object.entries(obj).map(([key, value]) => {
         try {
@@ -584,7 +586,7 @@ export function objModVals(
  * - if a fallback is provided, missing/undefined values use the fallback instead
  *
  * Does not mutate the original object.
- * Returns `{}` if the input is nullish.
+ * Returns `{}` if the input is not an object.
  *
  * @param obj - The source object
  * @param keys - List of keys to extract
@@ -622,7 +624,7 @@ export function objPick(
     fallback?: any
 ): BaseObject {
 
-    if (isNullish(obj)) return {}
+    if (!isObject(obj)) return {}
 
     const result: BaseObject = {}
 
@@ -692,7 +694,7 @@ export function objOmit(
     keys: string[]
 ): BaseObject {
 
-    if (isNullish(obj)) return {}
+    if (!isObject(obj)) return {}
 
     const result: BaseObject = {}
 
