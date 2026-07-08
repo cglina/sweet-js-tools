@@ -2,7 +2,7 @@
  * SWEET TYPE SYSTEM OVERVIEW:
  *
  * Base      → raw categories (string, number, object, array, etc.)
- * X         → usable values (non-empty, non-zero, etc.)
+ * X         → value refinement (empty, zero, anonymous, etc.)
  * Adapt     → type interpretation & conversion
  *
  * sweetType() → unified entry point

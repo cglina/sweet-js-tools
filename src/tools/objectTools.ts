@@ -540,7 +540,7 @@ export function objModKeys(
  * If the mapping function throws for an entry, the original value is kept.
  *
  * Does not mutate the original object.
- *  Returns `{}` if the input is not an object.
+ * Returns `{}` if the input is not an object.
  *
  * @example
  * objModVals(
@@ -657,7 +657,7 @@ export function objPick(
  * - preparing frontend-safe objects
  *
  * Does not mutate the original object.
- * Returns `{}` if the input is nullish.
+ * Returns {} if the input is not an object.
  *
  * @param obj - The source object
  * @param keys - List of keys to exclude
